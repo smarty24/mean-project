@@ -4,7 +4,9 @@ angular.module('userApp', [
     'authService',
     'mainCtrl',
     'userCtrl',
-    'userService'
+    'userService',
+    'articleService',
+    'articleCtrl'
 ])
 
 // application configuration to integrate token into requests

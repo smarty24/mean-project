@@ -1,0 +1,52 @@
+<div class="page-header">
+    <h1 ng-if="article.type == 'create'">Create Article</h1>
+    <h1 ng-if="article.type == 'edit'">Edit Article</h1>
+    <h1 ng-if="article.type == 'view'">{{ article.articleData.title }}</h1>
+</div>
+
+<!-- show a single article page -->
+<div class="container" ng-if="article.type == 'view'">
+    <article>
+        <p>{{ article.articleData.article_body }}</p>
+        <span>
+            <a ng-href="/articles/{{ article.articleData._id }}" class="btn btn-primary">Edit</a>
+        </span>
+    </article>
+</div>
+
+<!-- show for creating and editing articles -->
+
+<div ng-if="article.type == 'create' || article.type == 'edit'">
+
+<form class="form-horizontal" ng-submit="article.saveArticle()" >
+
+    <div class="form-group">
+        <input type="input" class="form-control" id="articleTitle" placeholder="Title here" ng-model="article.articleData.title">
+    </div>
+      
+    <div class="form-group">
+        <textarea class="form-control" id="articleTextarea" rows="5" placeholder="Article here..." ng-model="article.articleData.article_body"></textarea>
+    </div>
+
+    <div class="form-group">
+        <input type="hidden" class="form-control" ng-model="main.user._id">
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-offset-2 col-sm-6 col-sm-12">
+            <button type="submit" class="btn btn-success btn-lg btn-block" ng-if="article.type == 'create'">Create Article</button>
+            <button type="submit" class="btn btn-success btn-lg btn-block" ng-if="article.type == 'edit'">Update Article</button>
+        </div>
+    </div>
+</form>
+</div>
+<div class="row show-hide-message" ng-show="article.message">
+    <div class="col-sm-6 col-sm-offset-2">
+
+        <div class="alert alert-info">
+        {{ article.message }}
+        </div>
+
+    </div>
+</div>
+

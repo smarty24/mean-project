@@ -1,4 +1,5 @@
 var User            = require('../models/user');
+var Article            = require('../models/Article');
 var jwt             = require('jsonwebtoken');
 var config          = require('../../config');
 
@@ -17,7 +18,7 @@ module.exports = function(app, express) {
         // select the name username and password explicitly
         User.findOne({
             username: req.body.username
-        }).select('name username password').exec(function(err, user) {
+        }).select('_id name username password').exec(function(err, user) {
 
             if (err) throw err;
 
@@ -35,6 +36,7 @@ module.exports = function(app, express) {
                     // if user is found and password is right
                     // create a token
                     var token = jwt.sign({
+                        _id: user._id,
                         name: user.name,
                         username: user.username
                     }, superSecret, {
@@ -184,6 +186,95 @@ module.exports = function(app, express) {
             User.deleteOne({
                     _id: req.params.user_id
             }, function(err, user) {
+                    if (err) res.send(err);
+                    
+                    res.json({ message: 'Successfully deleted' });
+                });
+        });
+
+        // route for articles
+        // (accessed at http://localhost:8080/api/articles/)
+        apiRouter.route('/articles')
+            .post(function(req, res) {
+
+                // create new instance of article model
+                var article = new Article();
+
+                // set the article that should be posted
+                article.title = req.body.title;
+                article.article_body = req.body.article_body;
+                article.owner_id = req.body.owner_id;
+
+                // save the user and check for errors
+                article.save(function(err){
+                    if (err) {
+                        // duplicate entry
+                        if (err.code == 11000)
+                            return res.json({ success: false, message: 'Article already exists. '});
+                        else
+                            return res.send(err);
+                    }   
+                        res.json({ message: 'Article created!' });
+                
+                });
+            })
+
+            // get all the articles (accessed at GET http://localhost:8080/api/articles)
+            .get(function(req, res) {
+                Article.find(function(err, articles) {
+                if (err) res.send(err);
+                
+                    // return the articles
+                    res.json(articles);
+                });
+            });
+
+             // on routes that end in /articles/:article_id
+            // ----------------------------------------------------
+            apiRouter.route('/articles/:article_id')
+
+            // get the article with that id
+            // (accessed at GET http://localhost:8080/api/articles/:article_id)
+            .get(function(req, res) {
+                Article.findById(req.params.article_id, function(err, article) {
+                if (err) res.send(err);
+
+                    // return that article
+                    res.json(article);
+                });
+            })
+
+        // update the article with this id
+        // (accessed at PUT http://localhost:8080/api/articles/:article_id)
+        .put(function(req, res) {
+
+            // use our article model to find the article we want
+            Article.findById(req.params.article_id, function(err, article) {
+            
+                if (err) res.send(err);
+                
+                // update the article info only if its new
+                article.title = req.body.title;
+                article.article_body = req.body.article_body;
+                article.owner_id = req.body.owner_id;
+                
+                // save the article
+                article.save(function(err) {
+                    if (err) res.send(err);
+                    
+                    // return a message
+                    res.json({ message: 'Article updated!' });
+                });
+            
+            });
+        })
+
+        // delete the article with this id
+        // (accessed at DELETE http://localhost:8080/api/articles/:article_id)
+        .delete(function(req, res) {
+            Article.deleteOne({
+                    _id: req.params.article_id
+            }, function(err, article) {
                     if (err) res.send(err);
                     
                     res.json({ message: 'Successfully deleted' });

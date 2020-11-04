@@ -37,7 +37,36 @@ angular.module('appRoutes', ['ngRoute'])
         templateUrl: 'app/views/pages/users/single.html',
         controller: 'userEditController',
         controllerAs: 'user'
-    });
+    })
+
+    // page to an article
+    .when('/articles/view/:article_id', {
+        templateUrl: 'app/views/pages/articles/single.html',
+        controller: 'articleViewController',
+        controllerAs: 'article'
+    })
+    
+    // page to all articles
+    .when('/articles', {
+        templateUrl: 'app/views/pages/articles/all.html',
+        controller: 'articleController',
+        controllerAs: 'article'
+    })
+
+    // form to create a new article
+    // same view as edit page
+    .when('/articles/create', {
+        templateUrl: 'app/views/pages/articles/single.html',
+        controller: 'articleCreateController',
+        controllerAs: 'article'
+    })
+
+    // page to edit a user
+    .when('/articles/:article_id', {
+        templateUrl: 'app/views/pages/articles/single.html',
+        controller: 'articleEditController',
+        controllerAs: 'article'
+    })
 
     // get rid of the hash in the URL
     $locationProvider.html5Mode(true);
