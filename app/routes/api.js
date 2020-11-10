@@ -1,5 +1,5 @@
 var User            = require('../models/user');
-var Article            = require('../models/Article');
+var Article         = require('../models/Article');
 var jwt             = require('jsonwebtoken');
 var config          = require('../../config');
 
@@ -16,9 +16,7 @@ module.exports = function(app, express) {
 
         // find the user
         // select the name username and password explicitly
-        User.findOne({
-            username: req.body.username
-        }).select('_id name username password').exec(function(err, user) {
+        User.findOne({ username: req.body.username }).select('_id name username password').exec(function(err, user) {
 
             if (err) throw err;
 

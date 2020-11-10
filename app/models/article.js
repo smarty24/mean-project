@@ -7,6 +7,7 @@ var Schema = mongoose.Schema;
 var ArticleSchema = new Schema({
     title: String,
     article_body: String,
+    article_img: String,
     owner_id: String  
 });
 

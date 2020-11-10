@@ -18,7 +18,7 @@
 
 <div ng-if="article.type == 'create' || article.type == 'edit'">
 
-<form class="form-horizontal" ng-submit="article.saveArticle()" >
+<form class="form-horizontal" ng-submit="article.saveArticle()" enctype="multipart/form-data">
 
     <div class="form-group">
         <input type="input" class="form-control" id="articleTitle" placeholder="Title here" ng-model="article.articleData.title">
@@ -27,16 +27,6 @@
     <div class="form-group">
         <textarea class="form-control" id="articleTextarea" rows="5" placeholder="Article here..." ng-model="article.articleData.article_body"></textarea>
     </div>
-
-    <div class="input-group mb-3">
-        <div class="input-group-prepend">
-          <span class="input-group-text">Upload</span>
-        </div>
-        <div class="custom-file">
-          <input type="file" class="custom-file-input" id="inputGroupFile01">
-          <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
-        </div>
-    </div> 
 
     <div class="form-group">
         <input type="hidden" class="form-control" ng-model="main.user._id">
